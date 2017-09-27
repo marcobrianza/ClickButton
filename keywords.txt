@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map For ClickButton
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ClickButton	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+Update	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+CLICKBTN_PULLUP	LITERAL1
+
+#######################################
+# Built in variables (LITERAL2)
+#######################################
+
+clicks	LITERAL2
+depressed	LITERAL2
+maxPresses	LITERAL2
+debounceTime	LITERAL2
+multiclickTime	LITERAL2
+longClickTime	LITERAL2
+
