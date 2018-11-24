@@ -163,6 +163,10 @@ Default long click minimum held-down time is set to 1 second.
 
 `buttonObject.longClickTime = 1000; // Sets minimum long click held-down time to 1 second`
 
+**.changed**
+
+Gets set to true if clicks count has a new value, and is set to false in the next cycle. Useful if you want to act on a new user interaction like an event.
+
 ## MultiClicks example sketch
 
 This example is included with the library. Using an active-low button, and using the internal pull-up resistor of the Atmega chip.  
