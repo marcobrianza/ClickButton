@@ -30,4 +30,5 @@ maxPresses	LITERAL2
 debounceTime	LITERAL2
 multiclickTime	LITERAL2
 longClickTime	LITERAL2
+changed	LITERAL2
 
