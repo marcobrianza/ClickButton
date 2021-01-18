@@ -18,7 +18,7 @@ Long click(s) (Default: Last click is held down for at least 1 second)
 Dynamic settings for short/long clicks and debounce timers.
 
 
-##Details (some of them anyway)
+## Details (some of them anyway)
 
 **Short clicks** is simply the number of clicks within a set timelimit (default 250 ms).
 
@@ -34,7 +34,7 @@ One "ClickButton" instance copes with only one button, individually. One must in
 
 A multiple buttons example is included (using an array of ClickButton objects).
 
-#Notes
+# Notes
 
 This is just me trying to learn some more basic OO (about time!). This library started with me extending a bit on the Arduino debounce tutorial, and as it turned out what I deemed OK-ish, I thought this might be useful for others too. So I "librarized" it.
 
@@ -44,25 +44,27 @@ Another biggie is the change of a few variable (property) names.
 
 See the Usage page for more.
 
-###Acknowledgements
+### Acknowledgements
 
 Based on the Arduino debounce tutorial.
 
-#Usage
+# Usage
 Installing and usage of the ClickButton library
 
-##Installing
+## Installing
 
 For Arduino 0017 onwards, just extract the contents of the archive into the "libraries" folder located in your sketchbook folder.
 
-##Syntax
+## Syntax
 
 To instantiate a ClickButton object named buttonObject  
-` ClickButton buttonObject(pin [,active [,CLICKBTN_PULLUP]]);`
+```cpp
+ClickButton buttonObject(pin [,active [,CLICKBTN_PULLUP]]);
+```
 
 where: * buttonObject is your name for the button object in code. * pin is the pin connected to the button * active denotes an active LOW or HIGH button (default is LOW) * CLICKBTN_PULLUP turns on the internal pullup resistor. This is only possible with active low buttons.
 
-##Notes of notable warnings
+## Notes of notable warnings
 
 **Avoid using delay()!**
 
@@ -78,7 +80,7 @@ Instead, have a look at Blink without delay and AvoidDelay on the Arduino site f
 
 By "it" I mean this library. ISR / Interrupts stops most other things in the micro-controller (Arduino), including the timer counter obtainable from the millis() function. ClickButton is rather dependent on this timer..
 
-##Functions
+## Functions
 
 (Note the buttonObject is just a placeholder for any object name you use, of course)
 
@@ -129,7 +131,9 @@ This value is independent of button logic (active high or low).
 
 Intended use is for a "click-and-hold" function, by checking if a button is still held down after a long click. But it also serves as an immediate, debounced button state.
 
-`if (buttonClicks == -1 && buttonObject.depressed == true) then its-still-held-down;`
+```javascript
+if (buttonClicks == -1 && buttonObject.depressed == true) then its-still-held-down;
+```
 
 **.debounceTime**
 
@@ -137,7 +141,9 @@ Sets / gets the time limit for ignoring button bounces.
 
 If multiple clicks / signals are received within this time limit, they are ignored (So, do not set this too high or too similar to multiclickTime. Also, do not double-click faster than this :P)
 
-`buttonObject.debounceTime = 20; // debounce time set to 20 milliseconds`
+```javascript
+buttonObject.debounceTime = 20; // debounce time set to 20 milliseconds
+```
 
 **.multiclickTime**
 
@@ -149,7 +155,9 @@ If you want to do multiple clicks (like a double click), you must do it within t
 
 This also goes for single clicks, so this will be the delay determining when the single (or multiple) clicks are registered.
 
-`buttonObject.multiclickTime = 250;`
+```javascript
+buttonObject.multiclickTime = 250;
+```
 
 **.longClickTime**
 
@@ -161,7 +169,9 @@ The returned click count will be negative (indicating a long click), and the abs
 
 Default long click minimum held-down time is set to 1 second.
 
-`buttonObject.longClickTime = 1000; // Sets minimum long click held-down time to 1 second`
+```javascript
+buttonObject.longClickTime = 1000; // Sets minimum long click held-down time to 1 second
+```
 
 **.changed**
 
@@ -175,7 +185,7 @@ This example is included with the library. Using an active-low button, and using
 
 Blinks a LED according to different clicks on one button.
 
-Short clicks:
+##### Short clicks:
 
 Single click - Toggle LED on/off
 Double click - Blink      (Toggles LED 2 times/second)
@@ -195,7 +205,8 @@ Based on the Arduino Debounce example.
 
 GNU GPLv3 license */
 
-`include "ClickButton.h"
+```cpp
+include "ClickButton.h"
 
 // the LED const int ledPin = 10; int ledState = 0;
 
@@ -223,7 +234,7 @@ void loop() { // Update button state button1.Update();
 
 // even slower blink (must hold down button. 3 second looong blinks) if(LEDfunction == -3) ledState = (millis()/3000)%2;
 
-// update the LED digitalWrite(ledPin,ledState); } `
+// update the LED digitalWrite(ledPin,ledState); } 
 
 
 
