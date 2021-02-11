@@ -18,7 +18,7 @@ Long click(s) (Default: Last click is held down for at least 1 second)
 Dynamic settings for short/long clicks and debounce timers.
 
 
-##Details (some of them anyway)
+## Details (some of them anyway)
 
 **Short clicks** is simply the number of clicks within a set timelimit (default 250 ms).
 
@@ -34,7 +34,7 @@ One "ClickButton" instance copes with only one button, individually. One must in
 
 A multiple buttons example is included (using an array of ClickButton objects).
 
-#Notes
+# Notes
 
 This is just me trying to learn some more basic OO (about time!). This library started with me extending a bit on the Arduino debounce tutorial, and as it turned out what I deemed OK-ish, I thought this might be useful for others too. So I "librarized" it.
 
@@ -44,25 +44,25 @@ Another biggie is the change of a few variable (property) names.
 
 See the Usage page for more.
 
-###Acknowledgements
+### Acknowledgements
 
 Based on the Arduino debounce tutorial.
 
-#Usage
+# Usage
 Installing and usage of the ClickButton library
 
 ##Installing
 
 For Arduino 0017 onwards, just extract the contents of the archive into the "libraries" folder located in your sketchbook folder.
 
-##Syntax
+## Syntax
 
 To instantiate a ClickButton object named buttonObject  
 ` ClickButton buttonObject(pin [,active [,CLICKBTN_PULLUP]]);`
 
 where: * buttonObject is your name for the button object in code. * pin is the pin connected to the button * active denotes an active LOW or HIGH button (default is LOW) * CLICKBTN_PULLUP turns on the internal pullup resistor. This is only possible with active low buttons.
 
-##Notes of notable warnings
+## Notes of notable warnings
 
 **Avoid using delay()!**
 
@@ -78,7 +78,7 @@ Instead, have a look at Blink without delay and AvoidDelay on the Arduino site f
 
 By "it" I mean this library. ISR / Interrupts stops most other things in the micro-controller (Arduino), including the timer counter obtainable from the millis() function. ClickButton is rather dependent on this timer..
 
-##Functions
+## Functions
 
 (Note the buttonObject is just a placeholder for any object name you use, of course)
 
