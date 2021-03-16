@@ -106,9 +106,14 @@ ClickButton::ClickButton(uint8_t buttonPin, boolean activeType, boolean internal
   multiclickTime = 250;           // Time limit for multi clicks
   longClickTime  = 1000;          // time until "long" click register
   changed        = false;
-  pinMode(_pin, INPUT);
+  //pinMode(_pin, INPUT);
   // Turn on internal pullup resistor if applicable
-  if (_activeHigh == LOW && internalPullup == CLICKBTN_PULLUP) digitalWrite(_pin,HIGH);
+  //if (_activeHigh == LOW && internalPullup == CLICKBTN_PULLUP) digitalWrite(_pin,HIGH);
+  if (_activeHigh == LOW && internalPullup == CLICKBTN_PULLUP) 
+    pinMode(_pin, INPUT_PULLUP);
+  else
+    pinMode(_pin, INPUT);
+
 }
 
 
