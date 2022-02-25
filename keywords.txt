@@ -7,6 +7,7 @@
 #######################################
 
 ClickButton	KEYWORD1
+TouchButton	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -30,5 +31,6 @@ maxPresses	LITERAL2
 debounceTime	LITERAL2
 multiclickTime	LITERAL2
 longClickTime	LITERAL2
-changed	LITERAL2
+changed 	LITERAL2
+threshold       LITERAL2
 
