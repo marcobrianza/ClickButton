@@ -45,6 +45,7 @@ NOTE!
 
  
  History:
+ 2022.02.23 - Touch pin button for ESP32 added
  2013.08.29 - Some small clean-up of code, more sensible variable names etc.
                 Added another example code for multiple buttons in an object array
  2013.04.23 - A "minor" debugging: active-high buttons now work (wops)!
@@ -57,6 +58,7 @@ NOTE!
 
 #include "ClickButton.h"
 
+
 ClickButton::ClickButton(uint8_t buttonPin)
 {
   _pin           = buttonPin;
@@ -67,10 +69,12 @@ ClickButton::ClickButton(uint8_t buttonPin)
   clicks         = 0;
   depressed      = false;
   _lastBounceTime= 0;
+  _longStartTime = 0;
   debounceTime   = 20;            // Debounce timer in ms
   multiclickTime = 250;           // Time limit for multi clicks
   longClickTime  = 1000;          // time until long clicks register
   changed        = false;
+  holdTime       = 0;
   pinMode(_pin, INPUT);
 }
 
@@ -85,12 +89,15 @@ ClickButton::ClickButton(uint8_t buttonPin, boolean activeType)
   clicks         = 0;
   depressed      = 0;
   _lastBounceTime= 0;
+  _longStartTime = 0;
   debounceTime   = 20;            // Debounce timer in ms
   multiclickTime = 250;           // Time limit for multi clicks
   longClickTime  = 1000;          // time until long clicks register
   changed        = false;
+  holdTime       = 0;
   pinMode(_pin, INPUT);
 }
+
 
 ClickButton::ClickButton(uint8_t buttonPin, boolean activeType, boolean internalPullup)
 {
@@ -102,10 +109,12 @@ ClickButton::ClickButton(uint8_t buttonPin, boolean activeType, boolean internal
   clicks         = 0;
   depressed      = 0;
   _lastBounceTime= 0;
+  _longStartTime = 0;
   debounceTime   = 20;            // Debounce timer in ms
   multiclickTime = 250;           // Time limit for multi clicks
   longClickTime  = 1000;          // time until "long" click register
   changed        = false;
+  holdTime       = 0;
   //pinMode(_pin, INPUT);
   // Turn on internal pullup resistor if applicable
   //if (_activeHigh == LOW && internalPullup == CLICKBTN_PULLUP) digitalWrite(_pin,HIGH);
@@ -117,11 +126,109 @@ ClickButton::ClickButton(uint8_t buttonPin, boolean activeType, boolean internal
 }
 
 
-
 void ClickButton::Update()
 {
   long now = (long)millis();      // get current time
   _btnState = digitalRead(_pin);  // current appearant button state
+
+  // Make the button logic active-high in code
+  if (!_activeHigh) _btnState = !_btnState;
+
+  // If the switch changed, due to noise or a button press, reset the debounce timer
+  if (_btnState != _lastState) _lastBounceTime = now;
+
+
+  // debounce the button (Check if a stable, changed state has occured)
+  if (now - _lastBounceTime > debounceTime && _btnState != depressed)
+  {
+    depressed = _btnState;
+    if (depressed) _clickCount++;
+  }
+
+  if(_lastState == _btnState) changed = false;
+  _lastState = _btnState;
+
+  // If the button released state is stable, report nr of clicks and start new cycle
+  if (!depressed && (now - _lastBounceTime) > multiclickTime)
+  {
+    // positive count for released buttons
+    clicks = _clickCount;
+    _clickCount = 0;
+    if(clicks != 0) changed = true;
+  }
+
+  // Check for "long click"
+  if (depressed && (now - _lastBounceTime > longClickTime))
+  {
+    // negative count for long clicks
+    clicks = 0 - _clickCount;
+    _clickCount = 0;
+    if(clicks != 0) changed = true;
+  }
+}
+
+
+
+
+TouchButton::TouchButton(uint8_t buttonPin, uint8_t thresholdValue)
+{
+  _pin           = buttonPin;
+  _activeHigh    = LOW;           // Assume active-low button
+  _btnState      = !_activeHigh;  // initial button state in active-high logic
+  _lastState     = _btnState;
+  _clickCount    = 0;
+  clicks         = 0;
+  depressed      = false;
+  _lastBounceTime= 0;
+  _longStartTime = 0;
+  debounceTime   = 20;            // Debounce timer in ms
+  multiclickTime = 250;           // Time limit for multi clicks
+  longClickTime  = 500;           // time until long clicks register
+  changed        = false;
+  holdTime       = 0;
+  thresholdHigh  = thresholdValue;
+  thresholdLow   = 0;
+}
+
+
+TouchButton::TouchButton(uint8_t buttonPin, uint8_t thresholdValueHigh, uint8_t thresholdValueLow)
+{
+  _pin           = buttonPin;
+  _activeHigh    = LOW;           // Assume active-low button
+  _btnState      = !_activeHigh;  // initial button state in active-high logic
+  _lastState     = _btnState;
+  _clickCount    = 0;
+  clicks         = 0;
+  depressed      = false;
+  _lastBounceTime= 0;
+  _longStartTime = 0;
+  debounceTime   = 20;            // Debounce timer in ms
+  multiclickTime = 250;           // Time limit for multi clicks
+  longClickTime  = 500;           // time until long clicks register
+  changed        = false;
+  holdTime       = 0;
+  thresholdHigh  = thresholdValueHigh;
+  thresholdLow   = thresholdValueLow;
+}
+
+
+
+
+void TouchButton::Update()
+{
+  long now = (long)millis();      // get current time
+
+#if defined(ESP32)
+  int touchValue = touchRead(_pin);                               // read touch pin value
+  if((touchValue < thresholdHigh) && (touchValue > thresholdLow)) // is a touch value in the range?
+  {
+    _btnState = LOW;
+  }
+  else
+  {
+    _btnState = HIGH;
+  }
+#endif
 
   // Make the button logic active-high in code
   if (!_activeHigh) _btnState = !_btnState;
